@@ -10,8 +10,9 @@ This repository contains a set of PowerShell cmdlets for developers and administ
 
 * Account
   * Get and import Azure publish settings
+  * Login with Microsoft account or Organizational account through Windows Azure Active Directory
 * Environment
-  * Get the differnet out-of-box Windows Azure environments
+  * Get the different out-of-box Windows Azure environments
   * Add/Set/Remove customized environments (like your Windows Azure Pack environments)
   * Get Azure publish settings for a particular environment
 * Subscription
@@ -30,14 +31,15 @@ This repository contains a set of PowerShell cmdlets for developers and administ
   * Start/Stop Azure emulator.
   * Manage certificate.
   * Manage cloud service extensions
-    * Remote desktoo
-    * Diagnostics 
+    * Remote desktop
+    * Diagnostics
 * Storage
   * Manage storage account and access key.
   * Manage storage container and blob.
   * Copy storage blob.
   * Manage storage table.
   * Manage storage queue.
+  * Create SAS token.
 * SQL Azure
   * CRUD support for database server, database and firewall rule.
   * Get database server quota.
@@ -46,7 +48,6 @@ This repository contains a set of PowerShell cmdlets for developers and administ
   * Export data from Azure SQL database to blob storage.
 * Service Bus
   * Manage service bus namespaces.
-  * Manage service bus authorization rules on namespace, queue, topic, relay and notification hub.
 * VM
   * Manage VM, such as CRUD, import/export and start/stop/restart.
   * Manage VM image, such as CRUD.
@@ -71,6 +72,10 @@ This repository contains a set of PowerShell cmdlets for developers and administ
   * Get the list of geo locations supported by Azure.
   * Get the list of OS supported by Azure.
   * Direct you to Azure portal.
+* Windows Azure Pack
+  * Web Site: CRUD web site, deployment, configure and get log, start/stop/restart/show web site
+  * Service Bus: CRD namespace
+  * VM: CRUD VM, get OS disk, size profile and VM template, start/stop/restart/suspend/resume VM
 
 For detail descriptions and examples of the cmdlets, type
 * ```help azure``` to get all the cmdlets.
@@ -112,13 +117,28 @@ You can also find the standalone installers for all the versions at [Downloads](
 
 In general, following are the steps to start using Windows Azure PowerShell
 
-1. Get the publish settings information of your subscription
-2. Import the information into Windows Azure PowerShell
-3. Use the cmdlets
+* Get yourself authenticated with Windows Azure. For details, please check out [this article](http://www.windowsazure.com/en-us/manage/install-and-configure-windows-powershell/).
+  * Option 1: Login with your Microsoft account or Organizational account directly from PowerShell. Windows Azure Active Directory authentication is used in this case. No management certificate is needed.
+  * Option 2: Download and import a publish settings file which contains a management certificate.
+* Use the cmdlets
 
 The first step can be different for different environment you are targeting. Following are detail instructions for each supported environment.
 
 ## Windows Azure
+
+If you use both mechanisms on the same subscription, Windows Azure Active Directory authentication always wins. If you want to go back to management certificate authentication, please use ``Remove-AzureAccount``, which will remove the Windows Azure Active Directory information and bring management certificate authentication back in.
+
+### Login directly from PowerShell (Windows Azure Active Directory authentication)
+
+```powershell
+# Pop up an embedded browser control for you to login
+Add-AzureAccount
+
+# use the cmdlets to manage your services/applications
+New-AzureWebsite -Name mywebsite -Location "West US"
+```
+
+### Using publish settings file (Management certificate authentication)
 
 ```powershell
 # Download a file which contains the publish settings information of your subscription.
@@ -133,6 +153,7 @@ Import-AzurePublishSettingsFile "<file location>"
 # Use the cmdlets to manage your services/applications
 New-AzureWebsite -Name mywebsite -Location "West US"
 ```
+
 ## Windows Azure China
 
 ```powershell
@@ -218,4 +239,4 @@ If you encounter any bugs with the library please file an issue in the [Issues](
 
 # Learn More
 
-* [Windows Azure Developer Center](http://www.windowsazure.com/en-us/develop)
+* [Windows Azure Script Center](http://www.windowsazure.com/en-us/documentation/scripts/)
